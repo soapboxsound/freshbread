@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fresh Bread — Coming Soon</title>
+<meta name="description" content="Fresh Bread — Music Supervision & Development. Coming soon.">
+<meta property="og:title" content="Fresh Bread — Coming Soon">
+<meta property="og:description" content="Music Supervision & Development">
+<meta property="og:type" content="website">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1c1a19;
+    --paper: #f7f4ef;
+    --accent: #0B3B83;
+    --muted: #514c47;
+    --faint: #a6a09a;
+  }
+
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  html, body {
+    height: 100%;
+  }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'Inter', sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    text-align: center;
+    padding: 24px;
+    overflow-x: hidden;
+  }
+
+  .top-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 6px;
+    background: var(--accent);
+    transform-origin: left center;
+    animation: bar-in 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  .hero {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .logo {
+    width: clamp(14rem, 58vw, 32rem);
+    height: auto;
+    display: block;
+    animation: rise-in 0.85s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  .divider {
+    width: 56px;
+    height: 4px;
+    background: var(--accent);
+    border-radius: 2px;
+    margin: 28px 0;
+    transform-origin: center;
+    animation: divider-in 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.2s both;
+  }
+
+  .status {
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    letter-spacing: 0.28em;
+    font-size: clamp(0.75rem, 1.6vw, 0.9rem);
+    text-transform: uppercase;
+    color: var(--accent);
+    animation: fade-in 0.7s ease 0.35s both;
+  }
+
+  .tagline {
+    margin-top: 14px;
+    font-weight: 500;
+    font-size: clamp(0.95rem, 2vw, 1.15rem);
+    color: var(--muted);
+    max-width: 30ch;
+    animation: fade-in 0.7s ease 0.45s both;
+  }
+
+  footer {
+    position: absolute;
+    bottom: 28px;
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    color: var(--faint);
+    text-transform: uppercase;
+    animation: fade-in 0.8s ease 0.55s both;
+  }
+
+  @keyframes rise-in {
+    from {
+      opacity: 0;
+      transform: translateY(14px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  @keyframes divider-in {
+    from {
+      opacity: 0;
+      transform: scaleX(0.2);
+    }
+    to {
+      opacity: 1;
+      transform: scaleX(1);
+    }
+  }
+
+  @keyframes bar-in {
+    from { transform: scaleX(0); }
+    to { transform: scaleX(1); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .top-bar,
+    .logo,
+    .divider,
+    .status,
+    .tagline,
+    footer {
+      animation: none;
+    }
+  }
+</style>
+</head>
+<body>
+
+  <div class="top-bar" aria-hidden="true"></div>
+
+  <main class="hero">
+    <img
+      class="logo"
+      src="assets/fresh-bread-wordmark.png"
+      width="1179"
+      height="542"
+      alt="Fresh Bread NYC"
+    >
+
+    <div class="divider" aria-hidden="true"></div>
+
+    <p class="status">Coming Soon</p>
+    <p class="tagline">Music Supervision &amp; Development</p>
+  </main>
+
+  <footer>&copy; 2026 Fresh Bread</footer>
+
+</body>
+</html>
