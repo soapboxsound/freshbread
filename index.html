@@ -549,37 +549,34 @@
   </div>
 
 <script>
-// ── Vinyl grooves — distressed, spinning, slight warble ─────────────────
-const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+// ── Vinyl grooves (static, distressed, minimal) ─────────────────────────
 const vinyl = document.getElementById('vinyl');
 const vCtx = vinyl.getContext('2d');
-
-let disc = null;
-let discSize = 0;
-let vinylRaf = null;
-let viewW = 0;
-let viewH = 0;
-let centerX = 0;
-let centerY = 0;
 
 function hash(n) {
   const x = Math.sin(n * 127.1 + 311.7) * 43758.5453;
   return x - Math.floor(x);
 }
 
-function buildDisc(maxR) {
-  const minR = maxR * 0.11;
-  const pad = 4;
-  discSize = Math.ceil(maxR * 2 + pad * 2);
-  disc = document.createElement('canvas');
+function sizeVinyl() {
   const dpr = Math.min(window.devicePixelRatio || 1, 2);
-  disc.width = Math.floor(discSize * dpr);
-  disc.height = Math.floor(discSize * dpr);
-  const ctx = disc.getContext('2d');
-  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  const W = window.innerWidth;
+  const H = window.innerHeight;
+  vinyl.width = Math.floor(W * dpr);
+  vinyl.height = Math.floor(H * dpr);
+  vinyl.style.width = W + 'px';
+  vinyl.style.height = H + 'px';
+  vCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  drawVinyl(W, H);
+}
 
-  const cx = discSize / 2;
-  const cy = discSize / 2;
+function drawVinyl(W, H) {
+  vCtx.clearRect(0, 0, W, H);
+
+  const cx = W * 0.5;
+  const cy = H * 0.48;
+  const maxR = Math.min(W, H) * 0.78;
+  const minR = maxR * 0.11;
 
   let r = minR;
   let i = 0;
@@ -591,16 +588,16 @@ function buildDisc(maxR) {
       ? Math.PI * (0.5 + hash(i + 6) * 1.3)
       : Math.PI * 2;
 
-    ctx.beginPath();
-    ctx.arc(cx + wobble, cy + wobble * 0.6, r, start, start + sweep);
-    ctx.strokeStyle = `rgba(28, 26, 25, ${alpha})`;
-    ctx.lineWidth = hash(i + 3) > 0.88 ? 0.9 : 0.5;
-    ctx.stroke();
+    vCtx.beginPath();
+    vCtx.arc(cx + wobble, cy + wobble * 0.6, r, start, start + sweep);
+    vCtx.strokeStyle = `rgba(28, 26, 25, ${alpha})`;
+    vCtx.lineWidth = hash(i + 3) > 0.88 ? 0.9 : 0.5;
+    vCtx.stroke();
 
     if (hash(i + 11) > 0.965) {
       const a = hash(i + 12) * Math.PI * 2;
-      ctx.fillStyle = `rgba(28, 26, 25, ${0.05 + hash(i + 13) * 0.05})`;
-      ctx.fillRect(cx + Math.cos(a) * r, cy + Math.sin(a) * r, 0.8, 0.8);
+      vCtx.fillStyle = `rgba(28, 26, 25, ${0.05 + hash(i + 13) * 0.05})`;
+      vCtx.fillRect(cx + Math.cos(a) * r, cy + Math.sin(a) * r, 0.8, 0.8);
     }
 
     r += 1.05 + hash(i + 4) * 0.45;
@@ -614,79 +611,22 @@ function buildDisc(maxR) {
     const x0 = cx + Math.cos(a0) * rr;
     const y0 = cy + Math.sin(a0) * rr;
     const tang = a0 + Math.PI / 2 + (hash(s + 43) - 0.5) * 0.45;
-    ctx.beginPath();
-    ctx.moveTo(x0, y0);
-    ctx.lineTo(x0 + Math.cos(tang) * len, y0 + Math.sin(tang) * len);
-    ctx.strokeStyle = `rgba(28, 26, 25, ${0.035 + hash(s + 44) * 0.035})`;
-    ctx.lineWidth = 0.55;
-    ctx.stroke();
+    vCtx.beginPath();
+    vCtx.moveTo(x0, y0);
+    vCtx.lineTo(x0 + Math.cos(tang) * len, y0 + Math.sin(tang) * len);
+    vCtx.strokeStyle = `rgba(28, 26, 25, ${0.035 + hash(s + 44) * 0.035})`;
+    vCtx.lineWidth = 0.55;
+    vCtx.stroke();
   }
 
-  ctx.beginPath();
-  ctx.arc(cx, cy, minR * 0.22, 0, Math.PI * 2);
-  ctx.fillStyle = 'rgba(28, 26, 25, 0.055)';
-  ctx.fill();
+  vCtx.beginPath();
+  vCtx.arc(cx, cy, minR * 0.22, 0, Math.PI * 2);
+  vCtx.fillStyle = 'rgba(28, 26, 25, 0.055)';
+  vCtx.fill();
 }
 
-function sizeVinyl() {
-  viewW = window.innerWidth;
-  viewH = window.innerHeight;
-  centerX = viewW * 0.5;
-  centerY = viewH * 0.48;
-
-  const dpr = Math.min(window.devicePixelRatio || 1, 2);
-  vinyl.width = Math.floor(viewW * dpr);
-  vinyl.height = Math.floor(viewH * dpr);
-  vinyl.style.width = viewW + 'px';
-  vinyl.style.height = viewH + 'px';
-  vCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
-
-  const maxR = Math.min(viewW, viewH) * 0.78;
-  buildDisc(maxR);
-
-  if (reduceMotion) {
-    paintVinyl(0);
-  }
-}
-
-function paintVinyl(t) {
-  vCtx.clearRect(0, 0, viewW, viewH);
-  if (!disc) return;
-
-  // ~33⅓ RPM with a soft warble (off-axis + stretch)
-  const rpm = 33.333;
-  const angle = reduceMotion ? 0 : (t / 1000) * (rpm / 60) * Math.PI * 2;
-  const warble = reduceMotion ? 0 : Math.sin(t * 0.00105) * 0.018;
-  const wobbleX = reduceMotion ? 0 : Math.sin(t * 0.00068) * 3.2;
-  const wobbleY = reduceMotion ? 0 : Math.cos(t * 0.00091) * 2.4;
-  const sx = reduceMotion ? 1 : 1 + Math.sin(t * 0.00082) * 0.01;
-  const sy = reduceMotion ? 1 : 1 + Math.cos(t * 0.00097) * 0.01;
-
-  vCtx.save();
-  vCtx.translate(centerX + wobbleX, centerY + wobbleY);
-  vCtx.rotate(angle + warble);
-  vCtx.scale(sx, sy);
-  vCtx.drawImage(disc, -discSize / 2, -discSize / 2, discSize, discSize);
-  vCtx.restore();
-}
-
-function loopVinyl(t) {
-  paintVinyl(t);
-  vinylRaf = requestAnimationFrame(loopVinyl);
-}
-
-function startVinyl() {
-  sizeVinyl();
-  if (vinylRaf) cancelAnimationFrame(vinylRaf);
-  if (!reduceMotion) {
-    vinylRaf = requestAnimationFrame(loopVinyl);
-  }
-}
-
-window.addEventListener('resize', () => {
-  sizeVinyl();
-});
-startVinyl();
+window.addEventListener('resize', sizeVinyl);
+sizeVinyl();
 
 const PATTERNS = {
   /* Kick–Bass pads spell FRESH in a 5×3 pixel font across 16 steps */
