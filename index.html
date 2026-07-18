@@ -510,9 +510,10 @@
   <main class="hero">
     <img
       class="logo"
+      id="logo"
       src="assets/fresh-bread-wordmark.png"
-      width="1179"
-      height="542"
+      width="1215"
+      height="596"
       alt="Fresh Bread NYC"
     >
 
@@ -549,13 +550,25 @@
   </div>
 
 <script>
-// ── Vinyl grooves (static, distressed, minimal) ─────────────────────────
+// ── Vinyl grooves (static, distressed; centered on logo) ────────────────
 const vinyl = document.getElementById('vinyl');
 const vCtx = vinyl.getContext('2d');
+const logoEl = document.getElementById('logo');
 
 function hash(n) {
   const x = Math.sin(n * 127.1 + 311.7) * 43758.5453;
   return x - Math.floor(x);
+}
+
+function logoCenter() {
+  const rect = logoEl.getBoundingClientRect();
+  if (!rect.width || !rect.height) {
+    return { cx: window.innerWidth * 0.5, cy: window.innerHeight * 0.42 };
+  }
+  return {
+    cx: rect.left + rect.width / 2,
+    cy: rect.top + rect.height / 2,
+  };
 }
 
 function sizeVinyl() {
@@ -573,8 +586,7 @@ function sizeVinyl() {
 function drawVinyl(W, H) {
   vCtx.clearRect(0, 0, W, H);
 
-  const cx = W * 0.5;
-  const cy = H * 0.48;
+  const { cx, cy } = logoCenter();
   const maxR = Math.min(W, H) * 0.78;
   const minR = maxR * 0.11;
 
@@ -626,7 +638,12 @@ function drawVinyl(W, H) {
 }
 
 window.addEventListener('resize', sizeVinyl);
-sizeVinyl();
+logoEl.addEventListener('load', sizeVinyl);
+if (window.ResizeObserver) {
+  new ResizeObserver(sizeVinyl).observe(logoEl);
+}
+if (logoEl.complete) sizeVinyl();
+else sizeVinyl();
 
 const PATTERNS = {
   /* Kick–Bass pads spell FRESH in a 5×3 pixel font across 16 steps */
