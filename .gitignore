@@ -1,2 +1,13 @@
-.DS_Store
+# next
+node_modules
+.next
+out
 .vercel
+
+# misc
+.DS_Store
+*.pem
+npm-debug.log*
+.env*.local
+
+# old local originals (kept in public/assets when needed)
