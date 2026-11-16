@@ -1,2 +1,20 @@
-.DS_Store
+# next
+node_modules
+.next
+out
 .vercel
+
+# misc
+.DS_Store
+*.pem
+npm-debug.log*
+.env*.local
+
+# old local originals (kept in public/assets when needed)
+
+# unused army stills (optional later)
+/public/assets/army-*.jpg
+
+# parked / unused reel cut
+/public/reel/exxon.mp4
+/public/reel/thumbs/exxon.jpg
