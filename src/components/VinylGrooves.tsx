@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { usePathname } from "next/navigation";
 
 function hash(n: number) {
   const x = Math.sin(n * 127.1 + 311.7) * 43758.5453;
@@ -13,6 +14,7 @@ type VinylGroovesProps = {
 
 export function VinylGrooves({ targetId = "logo-mark" }: VinylGroovesProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const pathname = usePathname();
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -34,15 +36,17 @@ export function VinylGrooves({ targetId = "logo-mark" }: VinylGroovesProps) {
       const target = document.getElementById(targetId);
       const rect = target?.getBoundingClientRect();
       const cx = rect ? rect.left + rect.width / 2 : W * 0.5;
-      const cy = rect ? rect.top + rect.height / 2 : H * 0.42;
-      const maxR = Math.min(W, H) * 0.78;
-      const minR = maxR * 0.11;
+      const cy = rect ? rect.top + rect.height / 2 : H * 0.38;
+      // Reach the farthest corner so grooves fill the viewport
+      const maxR =
+        Math.hypot(Math.max(cx, W - cx), Math.max(cy, H - cy)) * 1.05;
+      const minR = Math.min(W, H) * 0.06;
 
       let r = minR;
       let i = 0;
       while (r < maxR) {
         const wobble = (hash(i) - 0.5) * 0.4;
-        const alpha = 0.022 + hash(i + 9) * 0.022;
+        const alpha = 0.024 + hash(i + 9) * 0.028;
         const start = hash(i + 2) * Math.PI * 2;
         const sweep =
           hash(i + 5) > 0.9 ? Math.PI * (0.5 + hash(i + 6) * 1.3) : Math.PI * 2;
@@ -84,7 +88,8 @@ export function VinylGrooves({ targetId = "logo-mark" }: VinylGroovesProps) {
       ctx.fill();
     };
 
-    paint();
+    // Wait a frame so page content (e.g. logo-mark) is in place after navigations
+    const frame = window.requestAnimationFrame(paint);
     const onResize = () => paint();
     window.addEventListener("resize", onResize);
     const target = document.getElementById(targetId);
@@ -95,10 +100,11 @@ export function VinylGrooves({ targetId = "logo-mark" }: VinylGroovesProps) {
     if (target && ro) ro.observe(target);
 
     return () => {
+      window.cancelAnimationFrame(frame);
       window.removeEventListener("resize", onResize);
       ro?.disconnect();
     };
-  }, [targetId]);
+  }, [targetId, pathname]);
 
   return (
     <canvas

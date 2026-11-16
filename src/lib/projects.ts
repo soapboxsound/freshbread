@@ -5,39 +5,54 @@ export type Project = {
   year: string;
   category: string;
   summary: string;
+  src: string;
+  poster: string;
+  song?: string;
+  artist?: string;
+  agency?: string;
 };
 
+/** Started from the parked SPBX showcase reel — credits still filling in. */
 export const projects: Project[] = [
   {
-    slug: "signal-loss",
-    title: "Signal Loss",
-    client: "Placeholder Brand",
-    year: "2026",
-    category: "Campaign",
-    summary: "A restless score for a product that never sleeps.",
+    slug: "brunch",
+    title: "Brunch.",
+    client: "American Express",
+    year: "2024",
+    category: "Advertising",
+    summary: "Music supervision for a national Amex spot.",
+    src: "/reel/brunch.mp4",
+    poster: "/reel/thumbs/brunch.jpg",
   },
   {
-    slug: "night-shift",
-    title: "Night Shift",
-    client: "Placeholder Studio",
-    year: "2026",
-    category: "Film",
-    summary: "Warm low-end and sharp needles for a late-city story.",
+    slug: "homecoming",
+    title: "Homecoming.",
+    client: "American Express",
+    year: "2024",
+    category: "Advertising",
+    summary: "Cue strategy and clearances for a broadcast package.",
+    src: "/reel/homecoming.mp4",
+    poster: "/reel/thumbs/homecoming.jpg",
   },
   {
-    slug: "room-tone",
-    title: "Room Tone",
-    client: "Placeholder Series",
-    year: "2025",
-    category: "Episodic",
-    summary: "Cue language that feels lived-in, not pasted on.",
+    slug: "neworleans",
+    title: "New Orleans.",
+    client: "American Express",
+    year: "2024",
+    category: "Advertising",
+    summary: "Supervision and licensing for a location-driven campaign film.",
+    src: "/reel/neworleans.mp4",
+    poster: "/reel/thumbs/neworleans.jpg",
   },
   {
-    slug: "first-rise",
-    title: "First Rise",
-    client: "Placeholder Launch",
-    year: "2025",
-    category: "Brand",
-    summary: "Opening motif for a company finding its voice.",
+    slug: "puppy",
+    title: "Puppy.",
+    client: "American Express",
+    year: "2024",
+    category: "Advertising",
+    summary: "Music direction for a high-visibility consumer spot.",
+    src: "/reel/puppy.mp4",
+    poster: "/reel/thumbs/puppy.jpg",
   },
 ];
+

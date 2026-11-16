@@ -7,15 +7,32 @@ export function ContactForm() {
 
   function onSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    const data = new FormData(e.currentTarget);
+    const name = String(data.get("name") || "").trim();
+    const email = String(data.get("email") || "").trim();
+    const message = String(data.get("message") || "").trim();
+
+    const subject = encodeURIComponent(`Fresh Bread inquiry — ${name}`);
+    const body = encodeURIComponent(
+      `${message}\n\n—\n${name}\n${email}`,
+    );
+    window.location.href = `mailto:hello@freshbread.music?subject=${subject}&body=${body}`;
     setSent(true);
   }
 
   if (sent) {
     return (
-      <div className="border border-accent/30 bg-accent/5 px-6 py-10">
-        <p className="font-display text-2xl font-bold text-ink">Got it.</p>
+      <div className="border border-accent/25 bg-accent/[0.04] px-6 py-10">
+        <p className="font-display text-2xl font-bold text-ink">Opening mail…</p>
         <p className="mt-3 text-muted">
-          Placeholder confirmation — real delivery comes next.
+          If nothing opened, write us directly at{" "}
+          <a
+            href="mailto:hello@freshbread.music"
+            className="text-accent underline-offset-2 hover:underline"
+          >
+            hello@freshbread.music
+          </a>
+          .
         </p>
       </div>
     );
@@ -30,6 +47,7 @@ export function ContactForm() {
         <input
           required
           name="name"
+          autoComplete="name"
           className="mt-2 w-full border-0 border-b border-ink/20 bg-transparent py-3 text-ink outline-none transition focus:border-accent"
         />
       </label>
@@ -41,6 +59,7 @@ export function ContactForm() {
           required
           type="email"
           name="email"
+          autoComplete="email"
           className="mt-2 w-full border-0 border-b border-ink/20 bg-transparent py-3 text-ink outline-none transition focus:border-accent"
         />
       </label>
@@ -59,7 +78,7 @@ export function ContactForm() {
         type="submit"
         className="border border-ink bg-ink px-6 py-3 text-[11px] font-semibold tracking-[0.2em] text-paper uppercase transition hover:border-accent hover:bg-accent"
       >
-        Send inquire
+        Send
       </button>
     </form>
   );
